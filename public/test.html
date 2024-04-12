@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Example</title>
+</head>
+<body>
+    <input type="text" id="messageInput" placeholder="Enter your message">
+    <button onclick="sendMessage()">Send</button>
+
+    <script src = "/socket.io/socket.io.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js" ></script> -->
+    <script>
+        // Create a new WebSocket instance
+
+        const socket = io();
+        // const socket = new WebSocket('ws://localhost:3000');
+
+        // Function to send a message to the server
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+
+            // Send the message to the server
+            socket.send(message);
+
+            // Clear the input field
+            messageInput.value = '';
+        }
+
+        // Event listener for when the WebSocket connection is established
+        socket.onopen = function(event) {
+            console.log('WebSocket connection established');
+        };
+
+        // Event listener for incoming messages from the server
+        socket.onmessage = function(event) {
+            const message = event.data;
+            console.log('Received message from server:', message);
+        };
+
+        // Event listener for WebSocket errors
+        socket.onerror = function(event) {
+            console.error('WebSocket error:', event);
+        };
+
+        // Event listener for WebSocket connection close
+        socket.onclose = function(event) {
+            console.log('WebSocket connection closed');
+        };
+    </script>
+</body>
+</html>

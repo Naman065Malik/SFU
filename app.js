@@ -49,12 +49,14 @@ io.on('connection', async (socket) => {
         console.log('Received message:', message);
     });
 
+    // To get Router RTP Capabilities for device creation on client side (Redis Data)
     socket.on('getRouterRtpCapabilities', (callback) => {
         const data = router.rtpCapabilities;
         console.log('getRouterRtpCapabilities:', data);
         callback(data);
     });
 
+    // Create WebRTC Transport and send ICE parameters to client (MediaSoup Servis Data)
     socket.on('createWebRtcTransport', async ({sender}, callback) => {
         console.log('createWebRTCTransport:', sender);
         if(sender) {
@@ -65,11 +67,13 @@ io.on('connection', async (socket) => {
         }
     });
 
+    // Connect Transport and Get DTLS parameters from client (Client Data)
     socket.on('connectTransport', async ({ dtlsParameters }) => {
         console.log('connectTransport:', dtlsParameters);
         await producerTransport.connect({ dtlsParameters });
     });
 
+    // Produce Media and send Producer ID to client (MediaSoup Servis Data)
     socket.on('produceTransport', async ({ kind, rtpParameters, appData }, callback) => {
         console.log('produceTransport:', kind, rtpParameters, appData);
         producer = await producerTransport.produce({
@@ -88,11 +92,13 @@ io.on('connection', async (socket) => {
         callback({ id: producer.id });
     });
 
+    // Connect Recv Transport and Get DTLS parameters from client (Client Data)
     socket.on('transport-recv-connect', async ({ dtlsParameters }) => {
         console.log('transport-recv-connect:', dtlsParameters);
         await consumerTransport.connect({ dtlsParameters });
     });
 
+    // Consume Media and send Consumer parameters to client (MediaSoup Servis Data)
     socket.on('consume', async ({ rtpCapabilities }, callback) => {
         try{
             console.log('producer:', producer);
@@ -136,6 +142,7 @@ io.on('connection', async (socket) => {
         }
     });
 
+    // Resume Consumer Suggested by mediasoup library
     socket.on('resumeConsumer', async () => {
         console.log('resumeConsumer');
         await consumer.resume();
@@ -145,6 +152,8 @@ io.on('connection', async (socket) => {
         console.log('A user disconnected');
     });
 
+    // Create Room Event Required for multiple Routers
+    // Currently only one Router is created 
     router = await worker.createRouter(config.mediasoup.router);
     console.log(router);
 });

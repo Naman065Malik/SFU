@@ -1,4 +1,5 @@
 const mediasoup = require("mediasoup");
+const confif = require('../Config');
 
 let worker;
 let router;
@@ -21,50 +22,8 @@ const createWorker = async () => {
 
 const createWebRTCTransport = async (router, callback) => {
     try{
-        const Transport_options = {
-            listenIps: [
-                {
-                    ip: "0.0.0.0", // for testing
-                    announcedIp: "172.17.0.1",
-                    // ip: request.connection.remoteAddress, // Use the IP address of the incoming connection
-                }
-            ],
-            enableUdp: true,
-            enableTcp: true,
-            preferUdp: true,
-        }
 
-        // const Transport_options = {
-        //     listenIps: [
-        //         {
-        //             ip: "0.0.0.0", // for testing
-        //             announcedIp: "127.0.0.1",
-        //             // ip: request.connection.remoteAddress, // Use the IP address of the incoming connection
-        //         }
-        //     ],
-        //     enableUdp: true,
-        //     enableTcp: true,
-        //     preferUdp: true,
-        //     iceServers: [
-        //         {
-        //             urls: 'stun:stun.l.google.com:19302'
-        //         },
-        //         {
-        //             urls: 'stun:stun1.l.google.com:19302'
-        //         },
-        //         {
-        //             urls: 'stun:stun2.l.google.com:19302'
-        //         },
-        //         {
-        //             urls: 'stun:stun3.l.google.com:19302'
-        //         },
-        //         {
-        //             urls: 'stun:stun4.l.google.com:19302'
-        //         }
-        //     ]
-        // }
-
-        let transport = await router.createWebRtcTransport(Transport_options);
+        let transport = await router.createWebRtcTransport(confif.transport);
         console.log("transport id:", transport.id);
 
         // The 'dtlsstatechange' event is raised when the DTLS state changes.

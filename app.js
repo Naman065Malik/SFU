@@ -2,7 +2,8 @@ const express = require('express');
 const http = require('http')
 const socketIo = require('socket.io');
 const mediasoup = require('mediasoup');
-const { create } = require('domain');
+
+const config = require('./Config');
 
 const app = express();
 const Server = http.createServer(app);
@@ -29,10 +30,7 @@ let producer;
 let consumer;
 
 const createWorker = async () => {
-    worker = await mediasoup.createWorker({
-        rtcMinPort: 2000,
-        rtcMaxPort: 2020,
-    })
+    worker = await mediasoup.createWorker(config.mediasoup.worker)
 
     console.log(`worker pid ${worker.pid}`);
     // console.log(worker)
@@ -43,23 +41,6 @@ const createWorker = async () => {
 }
 
 worker = createWorker();
-
-const mediaCodecs = [
-    {
-        kind: "audio",
-        mimeType: "audio/opus",
-        clockRate: 48000,
-        channels: 2,
-    },
-    {
-        kind: "video",
-        mimeType: "video/VP8",
-        clockRate: 90000,
-        parameters: {
-            "x-google-start-bitrate": 1000,
-        },
-    },
-];
 
 io.on('connection', async (socket) => {
     console.log('A user connected:', socket.id);
@@ -164,7 +145,7 @@ io.on('connection', async (socket) => {
         console.log('A user disconnected');
     });
 
-    router = await worker.createRouter({ mediaCodecs });
+    router = await worker.createRouter(config.mediasoup.router);
     console.log(router);
 });
 

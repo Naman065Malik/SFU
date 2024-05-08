@@ -78,6 +78,8 @@ This code of conduct and its related procedures also applies to unacceptable beh
 
 For any inquiries, concerns, or reporting of Code of Conduct violations, please contact us at naman@Curiousdevelopers.in.
 
+- [Naman Malik](mailto:naman@curiousdevelopers.in)
+
 ## 11. License and attribution
 
 The Citizen Code of Conduct is distributed by [Stumptown Syndicate](http://stumptownsyndicate.org) under a [Creative Commons Attribution-ShareAlike license](http://creativecommons.org/licenses/by-sa/3.0/). 
